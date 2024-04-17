@@ -1,7 +1,50 @@
-1. Template 1
-https://github.com/aws-samples/unishop-monolith-to-microservices/blob/master/MonoToMicroAssets/MonoToMicroCF.yaml
+(Main)
+curl https://raw.githubusercontent.com/aws-samples/unishop-monolith-to-microservices/main/MonoToMicroAssets/MonoToMicroCF.yaml > MonoToMicroCF-main.yaml
 
+(Use This - Master)
+curl https://raw.githubusercontent.com/shkim4u/aws-refactor-space-workshop-ko-kr/main/infrastructure-cloudformation/legacy-monolith.yaml > legacy-monolith.yaml
+
+aws cloudformation deploy --stack-name legacy-monolith \
+    --template-file ./legacy-monolith.yaml \
+    --capabilities CAPABILITY_NAMED_IAM
+
+
+1. Template 1: legacy-monolith
+curl https://raw.githubusercontent.com/shkim4u/aws-refactor-space-workshop-ko-kr/main/infrastructure-cloudformation/legacy-monolith.yaml > legacy-monolith.yaml
+
+(Optional Param)
 LatestAmiId	/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2	ami-0b083c14714c26021
 
-2. Template 2
+aws cloudformation deploy --stack-name legacy-monolith --template-file ./legacy-monolith.yaml --capabilities CAPABILITY_NAMED_IAM
 
+2. Template 2: refactor-space-foundation
+curl https://raw.githubusercontent.com/shkim4u/aws-refactor-space-workshop-ko-kr/main/infrastructure-cloudformation/refactor-space-foundation.yaml > refactor-space-foundation.yaml
+
+(Required Params)
+UniShopBackendDnsName	UniShopPublicDnsName	http://ec2-52-69-187-14.ap-northeast-1.compute.amazonaws.com
+UniShopVpcId	UniShopVpcId	vpc-09e9b1767e97ab599
+
+(TODO) 아래 두 파라미터를 CLI로 얻어올 것
+UniShopBackendDnsName
+UniShopVpcId
+
+# (No Need) Get the values of UniShopPublicDnsName and UniShopVpcId
+PUBLIC_DNS=`aws cloudformation describe-stacks --stack-name refactor-monolith-Legacy --query "Stacks[0].Outputs[?OutputKey=='PublicDns'].OutputValue" --output text` && echo $PUBLIC_DNS
+VPC_ID=`aws cloudformation describe-stacks --stack-name refactor-monolith-Legacy --query "Stacks[0].Outputs[?OutputKey=='VpcId'].OutputValue" --output text` && echo $VPC_ID
+
+#aws cloudformation deploy --stack-name refactor-space-foundation --template-file ./refactor-space-foundation.yaml --capabilities CAPABILITY_NAMED_IAM
+
+# Use the values as parameters in your command
+# (No need to specify the parameters in the command)
+#aws cloudformation deploy --stack-name refactor-space-foundation --template-file ./refactor-space-foundation.yaml --parameter-overrides UniShopPublicDnsName=$PUBLIC_DNS UniShopVpcId=$VPC_ID
+aws cloudformation deploy --stack-name refactor-space-foundation --template-file ./refactor-space-foundation.yaml
+
+3. Template 3: monotomicrocfddb
+https://github.com/aws-samples/unishop-monolith-to-microservices/blob/master/MonoToMicroAssets/MonoToMicroCFDDB.yaml
+
+No params
+
+4. Template 4: monotomicrolambda
+https://github.com/aws-samples/unishop-monolith-to-microservices/blob/master/MonoToMicroAssets/MonoToMicroLambda.yaml
+
+No params

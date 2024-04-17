@@ -1,0 +1,78 @@
+# TEMPLATE CURRENTLY LIVES IN https://github.com/aws-samples/unishop-monolith-to-microservices/blob/master/MonoToMicroRefactorSpaces/MonoToMicroCFRefactorSpaces-foundation.yaml
+AWSTemplateFormatVersion: 2010-09-09
+Description: AWS Migration Hub Refactor Spaces foundation stack for the Application Modernization Workshop/ Immersion Day
+
+Parameters:
+  UniShopVpcId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: UniShopVpcId
+
+  UniShopBackendDnsName:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: UniShopPublicDnsName
+
+Resources:
+  UniShopRefactorSpacesModernizationEnvironment:
+    Type: AWS::RefactorSpaces::Environment
+    Properties:
+      Name: unistore-dev
+      NetworkFabricType: NONE
+      Description: A Refactor Spaces environment for the Unicorn store
+
+  UniShopRefactorSpacesApplication:
+    Type: AWS::RefactorSpaces::Application
+    Properties:
+      Name: unistore
+      EnvironmentIdentifier: !Ref UniShopRefactorSpacesModernizationEnvironment
+      VpcId: !Ref UniShopVpcId
+      ProxyType: API_GATEWAY
+      ApiGatewayProxy:
+        EndpointType: REGIONAL
+
+  UniShopLegacyService:
+    Type: AWS::RefactorSpaces::Service
+    Properties:
+      Name: legacy
+      EnvironmentIdentifier: !Ref UniShopRefactorSpacesModernizationEnvironment
+      ApplicationIdentifier: !GetAtt UniShopRefactorSpacesApplication.ApplicationIdentifier
+      EndpointType: URL
+      VpcId: !Ref UniShopVpcId
+      UrlEndpoint:
+        Url: !Ref UniShopBackendDnsName
+        HealthUrl: !Join [ "", [ !Ref UniShopBackendDnsName, '/actuator/health' ] ]
+
+  UniShopDefaultRoute:
+    Type: AWS::RefactorSpaces::Route
+    Properties:
+      RouteType: DEFAULT
+      ServiceIdentifier: !GetAtt UniShopLegacyService.ServiceIdentifier
+      EnvironmentIdentifier: !Ref UniShopRefactorSpacesModernizationEnvironment
+      ApplicationIdentifier: !GetAtt UniShopRefactorSpacesApplication.ApplicationIdentifier
+
+  UniShopEnvironmentIdSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: UniShopEnvironmentId
+      Value: !GetAtt UniShopRefactorSpacesModernizationEnvironment.EnvironmentIdentifier
+      Type: String
+      Description: UniShop Application Id
+
+  UniShopApplicationIdSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: UniShopApplicationId
+      Value: !GetAtt UniShopRefactorSpacesApplication.ApplicationIdentifier
+      Type: String
+      Description: UniShop Environment Id
+
+  UniShopApiGatewayIdSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: UniShopApiGatewayId
+      Value: !GetAtt UniShopRefactorSpacesApplication.ApiGatewayId
+      Type: String
+      Description: UniShop API Gateway Id
+
+Outputs:
+  UniShopApiGatewayProxyUrl:
+    Value: !GetAtt UniShopRefactorSpacesApplication.ProxyUrl

@@ -1,0 +1,52 @@
+# TEMPLATE CURRENTLY LIVES IN https://github.com/aws-samples/unishop-monolith-to-microservices/blob/master/MonoToMicroAssets/MonoToMicroCFDDB.yaml
+AWSTemplateFormatVersion: 2010-09-09
+Description: Amazon DynamoDB stack for the Application Modernization Workshop/ Immersion Day
+Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: unishop
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: uuid
+          AttributeType: S
+      KeySchema:
+        - AttributeName: uuid
+          KeyType: HASH
+      Tags:
+        - Key: Name
+          Value: MonoToMicroDDBTable
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: MonoToMicroLambdaRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /service-role/
+      Policies:
+        - PolicyName: LambdaDynamoDBAccess
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:DescribeTable
+                  - dynamodb:GetItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                Resource: !GetAtt DynamoDBTable.Arn
+Outputs:
+  RoleForLambda:
+    Value: !GetAtt LambdaRole.Arn
