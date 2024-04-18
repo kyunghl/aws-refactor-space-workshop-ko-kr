@@ -1,3 +1,5 @@
+(주의) 이 파일은 컨텐츠를 작성하는 과정에서 테스트가 필요한 명령을 기록한 것으로서 실제로 실행할 필요가 없습니다.
+
 (Main)
 curl https://raw.githubusercontent.com/aws-samples/unishop-monolith-to-microservices/main/MonoToMicroAssets/MonoToMicroCF.yaml > MonoToMicroCF-main.yaml
 

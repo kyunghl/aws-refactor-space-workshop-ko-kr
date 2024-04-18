@@ -8,22 +8,37 @@ Migration Hub Refactor Spaces는 다음에 의해 애플리케이션 리팩터�
 * 유연한 라우팅 제어, 격리, 중앙 집중화 관리를 통해 단일 애플리케이션으로 기존 앱과 마이크로서비스의 관리 간소화
 * 앱이 변경되는 동안 개발, 관리, 운영을 간소화함으로써 데브 팀의 기술 및 배포 독립의 달성 및 가속화를 지원
 
----
-
 이 워크숍은 `AWS Migration Hub Refactor Space`를 통해 모놀리식 아키텍처에서 마이크로서비스 아키텍처로 이동하는 과정을 안내합니다.
 
 `Unishop`이라는 기존 모놀리식 애플리케이션을 살펴보고 해당 장바구니 기능을 별도의 마이크로서비스로 배포합니다. `AWS Migration Hub Refactor Spaces`를 사용하여 이러한 증분 전환을 단순화합니다.
 
-아래 사항을 진행자와 함께 수행하면 됩니다. 간단한 소개로부터 시작하겠습니다.
+아래 사항을 진행자와 함께 수행하면 됩니다. 간단한 소개와 작업 환경을 준비하는 것으로부터 시작하겠습니다.
+
+---
+
+## 통합 작업 환경 준비
+오늘 워크샵이 많은 코딩 작업이나 명령어 입력이 필요하지는 않지만 여유있는 작업을 위해 적절한 자원을 가진 통합 작업 환경을 준비해 보도록 하겠습니다.
+
+해당 통합 작업 환경은 `AWS Cloud9`을 통해 구성됩니다.
+
+[![통합 작업 환경 준비](docs/images/button-cloud9-setup.png)](docs/cloud9-setup.md "통합 작업 환경 준비")
+<br></br>
 
 ---
 
 ## 워크샵 소개
 
-[//]: # ([![소개]&#40;docs/images/introduction.png&#41;{: width="100" height="100"}]&#40;docs/introduction.md "소개"&#41;)
+[![소개](docs/images/button-introduction.png)](docs/introduction.md "소개")
+<br></br>
 
-[//]: # (<br></br>)
+---
 
-<a href="docs/introduction.md" title="소개">
-    <img src="docs/images/introduction.png" alt="소개" width="300" />
-</a>
+## `모듈 1`: `모놀리스 (Monlolith)` 애플리케이션
+
+`모듈 1`에서는 레거시 모놀리식 애플리케이션을 살펴보도록 하겠습니다. 
+
+[![소개](docs/images/button-monolith-application.png)](docs/monolith-application.md "소개")
+<br></br>
+
+
+---
