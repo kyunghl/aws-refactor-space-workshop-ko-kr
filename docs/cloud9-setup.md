@@ -59,8 +59,8 @@ npm install -g jwt-cli
 이제부터 모든 작업은 `Cloud9` 상에서 이루어지며, 먼저 워크샵 소스를 아래와 같이 다운로드합니다.<br>
 ```bash
 cd ~/environment/
-git clone https://github.com/shkim4u/aws-refactor-space-workshop-ko-kr.git workshop
-cd workshop
+git clone https://github.com/shkim4u/aws-refactor-space-workshop-ko-kr.git refactor-workshop
+cd refactor-workshop
 ```
 
 해당 소스 코드에는 `CloudFormation`으로 작성된 `IaC` 코드도 포함되어 있으며 여기에는 ```레거시 모놀리스 애플리케이션 자원```, ```AWS Refactor Space 자원```, ```리팩터링을 위한 마이크로서비스 (람다)``` 등의 자원이 포함되어 있습니다.<br>
