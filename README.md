@@ -40,5 +40,11 @@ Migration Hub Refactor Spaces는 다음에 의해 애플리케이션 리팩터�
 [![소개](docs/images/button-monolith-application.png)](docs/monolith-application.md "소개")
 <br></br>
 
-
 ---
+
+## `모듈 2`: `리팩터 스페이스 (Refactor Spaces)` 구축
+
+본격적으로 `리팩터 스페이스`를 구축하고 애플리케이션 리팩터링을 시작해 보겠습니다.
+
+[![리팩터 스케이스 구축](docs/images/button-configure-refactor-spaces.png)](docs/configure-refactor-spaces.md "리팩터 스페이스 구축")
+<br></br>

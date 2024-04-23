@@ -1,0 +1,45 @@
+1. 다음을 설명해 주세요.
+sed -i "s/:\/\/.*\"/:\/\/$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)\"/g" /home/ec2-user/MonoToMicro/MonoToMicroUI/config.json
+
+이 명령어는 `sed`라는 스트림 편집기를 사용하여 텍스트 파일을 수정합니다.
+
+- `-i` 옵션은 "in-place"를 의미하며, 이는 원본 파일을 직접 수정하겠다는 것을 나타냅니다.
+
+- `"s/:\/\/.*\"/:\/\/$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)\"/g"`는 `sed`의 명령어입니다. `s`는 'substitute' (치환)을 의미하며, `:\/\.*\"` 패턴을 찾아 `:\/\$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)\"`로 바꾸라는 의미입니다. 여기서 `.*`는 모든 문자를 의미하는 정규 표현식이며, `\"`는 따옴표를 의미합니다. `$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)`는 현재 EC2 인스턴스의 public hostname을 가져오는 명령어입니다.
+
+- `/home/ec2-user/MonoToMicro/MonoToMicroUI/config.json`는 `sed` 명령어가 적용될 파일의 경로입니다.
+
+따라서 이 명령어는 `/home/ec2-user/MonoToMicro/MonoToMicroUI/config.json` 파일에서 `://` 다음에 오는 모든 문자열(`\"`로 끝나는)을 현재 EC2 인스턴스의 public hostname으로 바꾸는 작업을 수행합니다. 이렇게 함으로써, 애플리케이션의 설정이 현재 인스턴스의 public hostname을 가리키도록 업데이트됩니다.
+
+2. 다음 서비스 파일에 대해 설명해 주세요.
+[Unit]
+Description=Restart Mono2Micro
+Wants=network.target
+After=syslog.target network-online.target amazon-cloudwatch-agent.target
+
+[Service]
+Type=simple
+ExecStart=/home/ec2-user/MonoToMicro/m2minit.sh
+Restart=on-failure
+RestartSec=60
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+
+이 파일은 systemd 서비스 유닛 파일입니다. systemd는 Linux 시스템에서 서비스를 관리하는 데 사용되는 시스템 및 서비스 매니저입니다. 이 파일은 Mono2Micro라는 서비스를 정의하고 있습니다.
+
+- `[Unit]`: 이 섹션은 서비스에 대한 설명과 서비스가 의존하는 다른 유닛에 대한 정보를 포함합니다.
+  - `Description`: 이 서비스의 간단한 설명입니다.
+  - `Wants`: 이 서비스가 시작되기를 원하는 다른 유닛을 나열합니다. 여기서는 `network.target`이 지정되어 있습니다.
+  - `After`: 이 서비스가 시작되기 전에 먼저 시작되어야 하는 다른 유닛을 나열합니다. 여기서는 `syslog.target`, `network-online.target`, `amazon-cloudwatch-agent.target`이 지정되어 있습니다.
+
+- `[Service]`: 이 섹션은 서비스의 동작 방식에 대한 정보를 포함합니다.
+  - `Type`: 서비스의 유형을 지정합니다. `simple`은 서비스 프로세스가 바로 시작되고, `ExecStart`에서 지정한 명령이 이 프로세스를 나타낸다는 것을 의미합니다.
+  - `ExecStart`: 서비스를 시작할 때 실행할 명령어를 지정합니다. 여기서는 `/home/ec2-user/MonoToMicro/m2minit.sh` 스크립트를 실행합니다.
+  - `Restart`: 서비스가 비정상적으로 종료될 때 재시작할지 여부를 지정합니다. `on-failure`는 서비스가 비정상적으로 종료될 때만 재시작한다는 것을 의미합니다.
+  - `RestartSec`: 서비스가 실패한 후 재시작하기 전에 대기할 시간(초)을 지정합니다.
+  - `KillMode`: 서비스를 종료할 때 어떤 프로세스를 종료할지를 지정합니다. `process`는 `ExecStart`에서 시작된 메인 프로세스만 종료한다는 것을 의미합니다.
+
+- `[Install]`: 이 섹션은 서비스가 설치될 때의 동작에 대한 정보를 포함합니다.
+  - `WantedBy`: 이 서비스를 활성화하면 지정된 유닛도 함께 활성화됩니다. 여기서는 `multi-user.target`이 지정되어 있습니다. 이는 시스템이 다중 사용자 모드로 부팅될 때 이 서비스를 시작하도록 지시합니다.
