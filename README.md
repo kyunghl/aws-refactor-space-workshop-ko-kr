@@ -46,5 +46,23 @@ Migration Hub Refactor Spaces는 다음에 의해 애플리케이션 리팩터�
 
 본격적으로 `리팩터 스페이스`를 구축하고 애플리케이션 리팩터링을 시작해 보겠습니다.
 
-[![리팩터 스케이스 구축](docs/images/button-configure-refactor-spaces.png)](docs/configure-refactor-spaces.md "리팩터 스페이스 구축")
+[![리팩터 스페이스 구축](docs/images/button-configure-refactor-spaces.png)](docs/configure-refactor-spaces.md "리팩터 스페이스 구축")
 <br></br>
+
+---
+
+## `모듈 3`: `장바구니` 마이크로서비스 분리
+
+앞선 모듈에서 구축된 `리팩터링 하니스 (Refactoring Harness)`인 `리팩터 스페이스`를 활용하여 `장바구니` 마이크로서비스를 분리해 보도록 하겠습니다.
+
+[![마이크로서비스 분리](docs/images/button-decompose-microservice.png)](docs/decompose-microservice.md "마이크로서비스 분리")
+<br></br>
+
+---
+
+## `정리`
+
+레거시 애플리케이션을 현대화하는 것은 필수적이며, 따라갈 수 있는 몇 가지 접근법이 있습니다. 이 워크숍을 통해 우리는 `Strangler Fig 패턴`을 사용하여 모놀리스를 분해하는 것의 이점을 강조하고자 했습니다. 어떤 접근법을 선택하든 점진적인 개선이 비즈니스에 이익을 가져다주고 애플리케이션 현대화를 실현하는 데 대한 신뢰를 높일 것이라고 믿습니다. 여러분의 여정에 행운을 빕니다!
+
+> (참고)<br>
+> `리팩터 스페이스` 콘솔에는 리팩터링에 대한 이해를 돕는 많은 자료들을 제공합니다. 진행자와 함께 이러한 자료에 대해서 좀 더 살펴보도록 합시다.

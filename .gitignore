@@ -355,3 +355,5 @@ defectdojo_token_output*
 *local-only*
 
 terraform.tfvars
+
+hidden-references.txt

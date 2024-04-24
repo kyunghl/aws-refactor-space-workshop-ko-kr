@@ -68,43 +68,67 @@ aws cloudformation deploy --stack-name refactor-space \
 
 > 우리는 이미 `CloudFormation`을 사용하여 계정에 배포한 `Refactor Spaces`에는 레거시 `서비스`도 포함되어 있으며 이름은 `legacy`입니다.
 
-`Refactor Space` 내의 `legacy` 서비스는 기존의 모놀리스를 나타냅니다. 우리의 목표는 서비스를 [[`모듈 1`의 `PublicDns` 확인]](https://github.com/shkim4u/aws-refactor-space-workshop-ko-kr/blob/e4bdc3e2ac518546bb2ba01cce4cdc2d787e8253/docs/monolith-application.md#L39-L39)에서 확인했던 현재 모놀리스의 백엔드 엔드포인트 URL(http://ec2-XXX-XXX-XXX-XXX.compute-1.amazonaws.com/)을 가리키도록 설정하는 것입니다. 이 `Refactor 서비스`는 모놀리스로의 모든 트래픽을 관리하는 새로운 프록시로 작동할 것입니다. (사실 이미 이렇게 구셩되어 있으며 여기서는 이를 확인하도록 합니다).
+`Refactor Space` 내의 `legacy` 서비스는 기존의 모놀리스를 나타냅니다. 우리의 목표는 서비스를 [[`모듈 1`의 `PublicDns` 확인]](https://github.com/shkim4u/aws-refactor-space-workshop-ko-kr/blob/e4bdc3e2ac518546bb2ba01cce4cdc2d787e8253/docs/monolith-application.md#L39-L39)에서 확인했던 현재 모놀리스의 백엔드 엔드포인트 URL (에: http://ec2-XXX-XXX-XXX-XXX.compute-1.amazonaws.com/)을 가리키도록 설정하는 것입니다. 이 `Refactor 서비스`는 모놀리스로의 모든 트래픽을 관리하는 새로운 프록시로 작동할 것입니다. (사실 이미 이렇게 구셩되어 있으며 여기서는 이를 확인하도록 합니다).
 
-1.1 AWS Migration Hub Refactor Spaces로 이동합니다. unistore-dev 환경을 선택합니다.
+1. `AWS Migration Hub Refactor Spaces`로 이동하여 `unistore-dev` 환경을 선택합니다.
 
-1.2 환경 내에서 unistore 애플리케이션을 선택합니다.
+2. 환경 내에서 `unistore` `애플리케이션`을 선택합니다.
 
-1.2 이미 생성된 1개의 서비스인 legacy가 있는지 확인합니다. 서비스를 선택하여 상세 페이지로 이동합니다.
+3. 이미 생성된 서비스 1개가 생성되어 있고 이름이 `legacy`인지 확인합니다. 서비스를 선택하여 상세 페이지로 이동합니다.
 
-사전 배포된 환경
+![](images/verify-refactor-spaces-application-service.png)
 
-이 서비스는 1.4 단계에서 확인한 모놀리스 백엔드 서버로 구성된 서비스 엔드포인트를 가지고 있음을 확인하세요. 또한, 모든 트래픽을 서비스 엔드포인트 URL로 지시하는 하나의 라우트가 있습니다. 이 서비스 프록시는 Amazon API Gateway를 사용하여 구현되었습니다.
-모든 기존 트래픽을 애플리케이션 프록시를 통해 레거시 서비스로 라우팅
+이 서비스는 [[`모듈 1`의 `PublicDns` 확인]](https://github.com/shkim4u/aws-refactor-space-workshop-ko-kr/blob/e4bdc3e2ac518546bb2ba01cce4cdc2d787e8253/docs/monolith-application.md#L39-L39) 단계에서 확인한 모놀리스 백엔드 서버로 구성된 서비스 엔드포인트를 가지고 있음을 확인하세요.
 
-이제 애플리케이션 프록시 리소스가 사용 가능하므로, Amazon S3에서 호스팅되는 프론트엔드 웹사이트를 레거시 서비스를 위한 새 엔드포인트인 Refactor Spaces로 사용하도록 설정하겠습니다. 이를 위해, 우리는 프론트엔드 애플리케이션의 config.json 파일을 새 엔드포인트의 URL로 업데이트하겠습니다.
+> (참고) 다음 `CloudFormation` 용 `AWS CLI` 명령을 사용하여 확인할 수도 있습니다.
+> ```bash
+> PUBLIC_DNS=`aws cloudformation describe-stacks --stack-name legacy-monolith --query "Stacks[0].Outputs[?OutputKey=='PublicDns'].OutputValue" --output text` && echo $PUBLIC_DNS
+> ```
 
-2.1 애플리케이션 프록시 URL 가져오기 - Refactor Space 내의 unistore 애플리케이션으로 한 단계 위로 이동합니다. 프록시 URL을 선택하고 URL을 복사합니다.
+또한, 모든 트래픽을 해당 서비스 엔드포인트 URL로 보내는 하나의 라우트가 구성되어 있습니다. 이 서비스 프록시는 `Amazon API Gateway`를 사용하여 구현되었습니다.
 
-API Gateway URL
+### 모든 기존 트래픽을 애플리케이션 프록시를 통해 레거시 서비스로 라우팅
 
-2.2 설정 파일 수정 - 이제 백엔드를 위한 새 URL을 사용하도록 프론트엔드 설정 파일을 수정해야 합니다. 설정 파일은 프론트엔드 웹사이트를 호스팅하는 S3 버킷에 위치해 있습니다. Amazon S3 서비스로 이동하고, STACK-NAME-uibucket-xxxxx (여기서 xxxxx는 CloudFormation에 의해 생성된 무작위 문자열입니다)라는 이름의 버킷을 엽니다.
+이제 애플리케이션 프록시 리소스가 사용 가능하므로, `Amazon S3`에서 호스팅되는 `프론트엔드 웹사이트`의 백엔드 엔드포인트를 `Refactor Spaces`가 생성한 새로운 엔드포인트를 사용하도록 설정하겠습니다. 이를 위해, 우리는 프론트엔드 애플리케이션의 `config.json` 파일을 새 엔드포인트의 URL로 업데이트하겠습니다.
 
-2.3 config.json 파일을 로컬 머신으로 다운로드합니다.
+1. 애플리케이션 프록시 URL 가져오기 - `Refactor Space` 내의 `unistore` 애플리케이션으로 한 단계 위로 이동합니다. `프록시 URL`을 선택하고 URL을 복사합니다.
 
-config.json
+![](images/refactor-spaces-proxy-endpoint.png)
 
-2.4 새로 다운로드한 config.json 파일을 열고 2.1 단계에서 복사한 unistore 프록시 URL로 호스트 URL을 교체한 후 파일을 저장합니다.
+2. 설정 파일 수정 - 이제 백엔드를 위한 새 URL을 사용하도록 프론트엔드 설정 파일을 수정해야 합니다. 설정 파일은 프론트엔드 웹사이트를 호스팅하는 S3 버킷에 위치해 있습니다. `Amazon S3` 서비스로 이동하고, `STACK-NAME-uibucket-xxxxx` (여기서 xxxxx는 CloudFormation에 의해 생성된 무작위 문자열)라는 이름의 버킷을 엽니다.
 
-정적 웹사이트 호스팅
+3. `config.json` 파일을 로컬 머신으로 다운로드합니다.
 
-"host" 값을 교체합니다.
-URL이 HTTPS를 사용하여 보안되어 있는지 확인하세요
+4. 새로 다운로드한 `config.json` 파일을 열고 위 1에서 복사한 `unistore` 프록시 URL로 호스트 URL을 교체한 후 파일을 저장합니다.
 
-API Gateway 단계 16
+![](images/s3-config-json-update-host-original.png)
 
-2.5 설정 파일 업로드 - Amazon S3 버킷 콘솔로 이동하고, 업로드 버튼을 클릭하여 새 config.json을 S3 정적 웹사이트로 다시 업로드합니다.
+> (주의)<br>
+> "host" 값을 교체할 때 URL이 HTTPS (HTTP가 아닌)를 사용하는지 확인하세요.
 
-이제 우리는 설정 파일의 URL을 업데이트했으므로 애플리케이션이 이제 프록시되고 다음과 같이 보입니다: 인프라
+![](images/s3-config-json-update-host-refactor-spaces-proxy.png)
 
-2.6 웹사이트 테스트 - Unishop 웹사이트가 여전히 작동하는지 확인하기 위해 프론트엔드를 테스트해 봅시다. 브라우저를 열고 Verify Frontend에서 Unishop URL로 이동합니다. 브라우저의 개발자 콘솔을 보면 새 프록시 호스트를 볼 수 있습니다.
-API Gateway 엔드포인트로 전환한 후 유니콘을 볼 수 없는 경우, 웹 브라우저에서 강제 새로고침을 수행하세요.
+5. 설정 파일 업로드 - `Amazon S3` 버킷 콘솔로 이동하고, 업로드 버튼을 클릭하여 수정된 `config.json` 파일을 S3 정적 웹사이트로 다시 업로드합니다.
+
+이제 우리는 설정 파일의 URL을 업데이트했으므로, 애플리케이션은 프록시되어 다음과 같이 구성되게 됩니다.
+
+![](images/legacy-application-proxied.png)
+
+> (참고)<br>
+> 이 다이어그램은 좀 더 설명을 필요로 하는 부분이 있습니다. 진행자와 함께 다이그램을 구성하는 AWS 리소스를 좀 더 살펴보도록 합니다.   
+
+6. 웹사이트 테스트 - `Unishop` 웹사이트가 여전히 작동하는지 확인하기 위해 프론트엔드를 테스트해 봅시다. 브라우저를 열고 `Unishop URL`로 이동합니다 (아래 CLI 명령 사용). 브라우저의 개발자 콘솔을 보면 새 프록시 호스트를 볼 수 있습니다.
+```bash
+WEBSITE_URL=`aws cloudformation describe-stacks --stack-name legacy-monolith --query "Stacks[0].Outputs[?OutputKey=='WebsiteURL'].OutputValue" --output text` && echo $WEBSITE_URL
+```
+
+> (참고)<br>
+> API Gateway 엔드포인트로 전환한 후 유니콘을 볼 수 없는 경우, 웹 브라우저에서  "새로 고침"을 수행한 후 다시 시도해 보세요.
+
+---
+
+## 요약
+
+이번 모듈에서는 `AWS Migration Hub Refactor Spaces`를 사용하여 유연한 라우팅 제어, 격리, 중앙 집중식 관리를 통해 레거시 애플리케이션과 마이크로서비스를 단일 애플리케이션으로 관리할 수 있는 환경을 생성했습니다.
+
+다음 모듈에서는 모놀리스의 쇼핑 카트 기능을 대체할 새로운 마이크로서비스를 생성할 것입니다. 그런 다음 `Migration Hub Refactor Spaces` 프록시를 사용하여 쇼핑 카트에 대한 트래픽을 새로운 마이크로서비스로 리디렉션하겠습니다.
