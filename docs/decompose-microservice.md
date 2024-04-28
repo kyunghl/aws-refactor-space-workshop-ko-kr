@@ -99,7 +99,7 @@ aws cloudformation deploy --stack-name shopping-cart-lambda \
      * 소스 경로: ```/unicorns/basket```
      * 하위 경로 포함: `체크 해제`
      * 메서드: `POST` ("모두 일치" 체크 해제)
-     * `이 경로를 활성 상태에서 생성` 체크
+     * `이 경로를 활성 상태로 생성` 체크
 
 ![](images/refactor-space-service-AddToCartService-1.png)<br>
 ![](images/refactor-space-service-AddToCartService-2.png)<br>
@@ -133,7 +133,7 @@ aws cloudformation deploy --stack-name shopping-cart-lambda \
         * 소스 경로: ```/unicorns/basket```
         * 하위 경로 포함: `체크 해제`
         * 메서드: `DELETE` ("모두 일치" 체크 해제)
-        * `이 경로를 활성 상태에서 생성` 체크
+        * `이 경로를 활성 상태로 생성` 체크
 
 ![](images/refactor-space-service-RemoveCartService-1.png)<br>
 ![](images/refactor-space-service-RemoveCartService-2.png)<br>
@@ -175,7 +175,7 @@ aws cloudformation deploy --stack-name shopping-cart-lambda \
         * 소스 경로: ```/unicorns/basket```
         * 하위 경로 포함: <u>**`체크`**</u>
         * 메서드: `GET` ("모두 일치" 체크 해제)
-        * `이 경로를 활성 상태에서 생성` 체크
+        * `이 경로를 활성 상태로 생성` 체크
 
 ![](images/refactor-space-service-GetCartService-1.png)<br>
 ![](images/refactor-space-service-GetCartService-2.png)<br>
@@ -239,21 +239,21 @@ Lambda 함수는 다음을 포함하는 출력을 반환해야 합니다:
    2. 리소스 트리에서 `/unicorns/basket/{proxy+}`의 `GET` 메서드를 선택합니다. 
    3. 오른쪽의 `통합 요청 (Ingegration Request)`을 클릭하고 `편집` 버튼을 클릭합니다.
    ![](images/api-gateway-lambda-integration-get.png)
-   4. `Lambda 프록시 통합` 사용 체크를 해제하고 `확인`을 클릭합니다.
+   4. `Lambda 프록시 통합` 사용 체크를 해제하고 `저장`을 클릭합니다.
    ![](images/api-gateway-disable-lambda-proxy-integration-get-basket.png)
 2. `POST` 메서드
    1. `API Gateway` 왼쪽 메뉴에서 리소스를 선택합니다.
    2. 리소스 트리에서 `/unicorns/basket`의 `POST` 메서드를 선택합니다.
    3. 오른쪽의 `통합 요청 (Ingegration Request)`을 클릭하고 `편집` 버튼을 클릭합니다.
    ![](images/api-gateway-disable-lambda-proxy-ingegration-post-1.png)
-   4. `Lambda 프록시 통합` 사용 체크를 해제하고 `확인`을 클릭합니다.
+   4. `Lambda 프록시 통합` 사용 체크를 해제하고 `저장`을 클릭합니다.
    ![](images/api-gateway-disable-lambda-proxy-ingegration-post-2.png)
 3. `DELETE` 메서드
    1. `API Gateway` 왼쪽 메뉴에서 리소스를 선택합니다.
    2. 리소스 트리에서 `/unicorns/basket`의 `DELETE` 메서드를 선택합니다.
    3. 오른쪽의 `통합 요청 (Ingegration Request)`을 클릭하고 `편집` 버튼을 클릭합니다.
    ![](images/api-gateway-disable-lambda-proxy-ingegration-delete-1.png)
-   4. `Lambda 프록시 통합` 사용 체크를 해제하고 `확인`을 클릭합니다.
+   4. `Lambda 프록시 통합` 사용 체크를 해제하고 `저장`을 클릭합니다.
    ![](images/api-gateway-disable-lambda-proxy-ingegration-delete-2.png)
 
 #### (3) *`GET `메서드를 위한 매핑 템플릿 구성*
@@ -296,7 +296,7 @@ Lambda 함수는 다음을 포함하는 출력을 반환해야 합니다:
 1. `/unicorns/basket`의 `GET` 메서드를 선택합니다.
 
 2. `삭제`를 선택하고, 그 후에 나오는 대화 상자에서 `확인`을 클릭합니다.
-![](images/api-gateway-resource-unicorns-basket-delete.png)
+![](images/api-gateway-delete-redundant-get-method.png)
 
 ### 서비스 `API Gateway` 배포
 

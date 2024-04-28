@@ -8,9 +8,11 @@
 
 * `Refactor Spaces 애플리케이션 (Refactor Spaces Application)`은 `서비스 (Service)`와 `라우트 (Route)`의 컨테이너이며, 애플리케이션을 외부 호출자에게 노출하는 단일 외부 엔드포인트를 제공합니다. `Refactor Spaces 애플리케이션`은 `Strangler Fig 패턴`을 모델링하고 `Amazon API Gateway`, `API Gateway VPC 링크`, `Network Load Balancer`, `리소스 기반 IAM 정책`을 조정하여 애플리케이션의 `HTTP 엔드포인트`에 새로운 서비스를 투명하게 추가할 수 있습니다. 또한 기존 애플리케이션에서 새로운 서비스로 트래픽을 점진적으로 라우팅합니다. 이렇게 하면 애플리케이션 소비자에게 기본 아키텍처 변경이 투명하게 유지됩니다. `스트랭글러 피그 패턴`에 대한 자세한 정보는 `마틴 파울러 (Martin Fowler)` [[Strangler Fig Proxy]](https://martinfowler.com/bliki/StranglerFigApplication.html)를 참조하십시오.
 
-* `Refactor Spaces 서비스 (Refactor Spaces Services)`는 고유한 엔드포인트를 통해 접근할 수 있는 서비스입니다. 서비스 엔드포인트는 다음 두 가지 유형 중 하나입니다: `HTTP(S) URL` 또는 `AWS Lambda 함수`. `Refactor Spaces`는 `URL 서비스`에 대한 DNS 질의를 해석하고 DNS 항목이 변경될 때 `NLB`를 자동으로 업데이트합니다. 이 예제에서는 두 가지 서비스가 있습니다:
-  1. 레거시 서비스는 기존의 모놀리식을 나타냅니다. 기본적으로 모든 트래픽은 모놀리식으로 라우팅됩니다.
-  2. 쇼핑 카트 서비스는 쇼핑 카트 기능을 나타냅니다.
+* `Refactor Spaces 서비스 (Refactor Spaces Services)`는 고유한 엔드포인트를 통해 접근할 수 있는 서비스입니다. 서비스 엔드포인트는 다음 두 가지 유형 중 하나입니다: `HTTP(S) URL` 또는 `AWS Lambda 함수`. 이 예제에서는 두 가지 서비스가 있습니다:
+    1. 레거시 서비스는 기존의 모놀리식을 나타냅니다. 기본적으로 모든 트래픽은 모놀리식으로 라우팅됩니다.
+    2. `장바구니` 서비스는 쇼핑 카트 기능을 나타냅니다.
+
+[//]: # (* `Refactor Spaces`는 `URL 서비스`에 대한 DNS 질의를 해석하고 DNS 항목이 변경될 때 `NLB`를 자동으로 업데이트합니다.)
 
 ---
 
@@ -68,7 +70,7 @@ aws cloudformation deploy --stack-name refactor-space \
 
 > 우리는 이미 `CloudFormation`을 사용하여 계정에 배포한 `Refactor Spaces`에는 레거시 `서비스`도 포함되어 있으며 이름은 `legacy`입니다.
 
-`Refactor Space` 내의 `legacy` 서비스는 기존의 모놀리스를 나타냅니다. 우리의 목표는 서비스를 [[`모듈 1`의 `PublicDns` 확인]](https://github.com/shkim4u/aws-refactor-space-workshop-ko-kr/blob/e4bdc3e2ac518546bb2ba01cce4cdc2d787e8253/docs/monolith-application.md#L39-L39)에서 확인했던 현재 모놀리스의 백엔드 엔드포인트 URL (에: http://ec2-XXX-XXX-XXX-XXX.compute-1.amazonaws.com/)을 가리키도록 설정하는 것입니다. 이 `Refactor 서비스`는 모놀리스로의 모든 트래픽을 관리하는 새로운 프록시로 작동할 것입니다. (사실 이미 이렇게 구셩되어 있으며 여기서는 이를 확인하도록 합니다).
+`Refactor Space` 내의 `legacy` 서비스는 기존의 모놀리스를 나타냅니다. 현재 우리의 목표는 서비스를 현재의 모놀리스의 백엔드 엔드포인트 URL (에: http://ec2-XXX-XXX-XXX-XXX.compute-1.amazonaws.com/, `모듈 1`에서 확인했던 `PulbicDns`)을 가리키도록 설정하는 것입니다. 이 `Refactor 서비스`는 모놀리스로의 모든 트래픽을 전달하는 새로운 프록시로 작동할 것입니다. (사실 이미 이렇게 구셩되어 있으며 여기서는 이를 확인하도록 합니다).
 
 1. `AWS Migration Hub Refactor Spaces`로 이동하여 `unistore-dev` 환경을 선택합니다.
 
@@ -95,7 +97,7 @@ aws cloudformation deploy --stack-name refactor-space \
 
 ![](images/refactor-spaces-proxy-endpoint.png)
 
-2. 설정 파일 수정 - 이제 백엔드를 위한 새 URL을 사용하도록 프론트엔드 설정 파일을 수정해야 합니다. 설정 파일은 프론트엔드 웹사이트를 호스팅하는 S3 버킷에 위치해 있습니다. `Amazon S3` 서비스로 이동하고, `STACK-NAME-uibucket-xxxxx` (여기서 xxxxx는 CloudFormation에 의해 생성된 무작위 문자열)라는 이름의 버킷을 엽니다.
+2. 설정 파일 수정 - 이제 백엔드를 위한 새 URL을 사용하도록 프론트엔드 설정 파일을 수정해야 합니다. 설정 파일은 프론트엔드 웹사이트를 호스팅하는 S3 버킷에 위치해 있습니다. `Amazon S3` 서비스로 이동하고, `legacy-monolith-uibucket-xxxxx` (여기서 xxxxx는 CloudFormation에 의해 생성된 무작위 문자열)라는 이름의 버킷을 엽니다.
 
 3. `config.json` 파일을 로컬 머신으로 다운로드합니다.
 
@@ -108,7 +110,7 @@ aws cloudformation deploy --stack-name refactor-space \
 
 ![](images/s3-config-json-update-host-refactor-spaces-proxy.png)
 
-5. 설정 파일 업로드 - `Amazon S3` 버킷 콘솔로 이동하고, 업로드 버튼을 클릭하여 수정된 `config.json` 파일을 S3 정적 웹사이트로 다시 업로드합니다.
+5. 설정 파일 업로드 - `Amazon S3` 버킷 콘솔로 이동하고, 업로드 버튼을 클릭하여 수정된 `config.json` 파일을 `S3 정적 웹사이트`로 다시 업로드합니다.
 
 이제 우리는 설정 파일의 URL을 업데이트했으므로, 애플리케이션은 프록시되어 다음과 같이 구성되게 됩니다.
 
@@ -131,4 +133,4 @@ WEBSITE_URL=`aws cloudformation describe-stacks --stack-name legacy-monolith --q
 
 이번 모듈에서는 `AWS Migration Hub Refactor Spaces`를 사용하여 유연한 라우팅 제어, 격리, 중앙 집중식 관리를 통해 레거시 애플리케이션과 마이크로서비스를 단일 애플리케이션으로 관리할 수 있는 환경을 생성했습니다.
 
-다음 모듈에서는 모놀리스의 쇼핑 카트 기능을 대체할 새로운 마이크로서비스를 생성할 것입니다. 그런 다음 `Migration Hub Refactor Spaces` 프록시를 사용하여 쇼핑 카트에 대한 트래픽을 새로운 마이크로서비스로 리디렉션하겠습니다.
+다음 모듈에서는 모놀리스의 `장바구니` 기능을 대체할 새로운 마이크로서비스를 생성할 것입니다. 그런 다음 `Migration Hub Refactor Spaces` 프록시를 사용하여 쇼핑 카트에 대한 트래픽을 새로운 마이크로서비스로 리디렉션하겠습니다.

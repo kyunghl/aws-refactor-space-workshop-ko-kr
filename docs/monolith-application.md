@@ -24,6 +24,9 @@ aws cloudformation deploy --stack-name legacy-monolith \
     --capabilities CAPABILITY_NAMED_IAM
 ```
 
+> (참고)<br>
+> 자원 생성이 완료되면 진행자와 함께 `CloudFormation` 템플릿이 어떻게 구성되었는지 살펴보는 것도 좋습니다.
+
 ---
 
 ## `백엔드 애플리케이션` 확인
@@ -48,7 +51,7 @@ aws cloudformation deploy --stack-name legacy-monolith \
 
 ![](images/legacy-monolith-get-unicorns.png)
 
-이제 백엔드(Java Spring Boot 애플리케이션)가 검증되었으므로, S3 정적 웹사이트 호스팅을 사용하여 프론트엔드를 확인해 봅시다.
+이제 백엔드 (`Java Spring Boot` 애플리케이션)가 검증되었으므로, `S3 정적 웹사이트 호스팅`을 사용하는 프론트엔드를 확인해 봅시다.
 
 ---
 
@@ -62,7 +65,7 @@ aws cloudformation deploy --stack-name legacy-monolith \
 
 `프론트엔드` 웹사이트는 `Amazon S3 정적 웹 호스팅` 기능을 사용하여 호스팅됩니다. 이는 간단하면서도 강력한 호스팅 솔루션으로, 성장하는 요구 사항을 충족시키기 위해 자동으로 확장됩니다.
 
-1. `Amazon S3`로 이동하여 `CloudFormation`이 생성한 `STACK-NAME-uibucket-xxxxx`라는 이름의 버킷을 클릭합니다 (`xxxxx`는 `CloudFormation`이 생성한 랜덤 문자열입니다).
+1. `Amazon S3`로 이동하여 `CloudFormation`이 생성한 `legacy-monolith-uibucket-xxxxx`라는 이름의 버킷을 클릭합니다 (`xxxxx`는 `CloudFormation`이 생성한 랜덤 문자열입니다).
 
 2. `속성 (Properties)` 탭을 선택하고 `정적 웹사이트 호스팅 (Static Website Hosting)`으로 스크롤합니다.
 
@@ -79,7 +82,7 @@ aws cloudformation deploy --stack-name legacy-monolith \
 
    3. 이 `UUID`를 기록해 두십시요. 이 정보는 사용자와 장바구니를 식별하는 데 사용됩니다. 
    4. 애플리케이션에 로그인합니다. 가입 시 사용한 이메일만 입력하면 됩니다, 비밀번호는 필요하지 않습니다. 브라우저 개발자 콘솔에 `[] "Got the cart"` 메시지가 표시되는지 확인합니다. 
-   5. 쇼핑 카트에 아이템을 추가/삭제해 봅니다. 브라우저의 콘솔에서 출력을 확인합니다. 참고로 각 아이템은 하나만 추가할 수 있습니다.
+   5. `장바구니`에 아이템을 추가/삭제해 봅니다. 브라우저의 콘솔에서 출력을 확인합니다. 참고로 각 아이템은 하나만 추가할 수 있습니다.
 
 ---
 
@@ -121,4 +124,4 @@ c9 open MonoToMicro/MonoToMicroLegacy/database/create_tables.sql
 
 우리의 목표는 레거시 앱의 `BasketController` 기능과 그것이 사용하는 `unicorn_basket` 테이블을 대체할 수 있는 새로운 `마이크로서비스`를 배포하는 것입니다. 마이크로서비스는 `DynamoDB`를 데이터베이스로 사용하는 `AWS Lambda`를 통해 구현될 것입니다.
 
-`Stranger Fig 패턴`을 적용하기 위해서는, `쇼핑 카트` 트래픽을 `레거시 애플리케이션`에서 새로운 `마이크로서비스`로 리디렉션하는 방법이 필요합니다. 이때 `Refactor Spaces`를 활용하여 `API Gateway`의 `Lambda 통합`을 조정함으로써 `라우팅`을 단순화합니다.
+`Stranger Fig 패턴`을 적용하기 위해서는, `장바구니` 트래픽을 `레거시 애플리케이션`에서 새로운 `마이크로서비스`로 리디렉션하는 방법이 필요합니다. 이때 `Refactor Spaces`를 활용하여 `API Gateway`의 `Lambda 통합`을 조정함으로써 `라우팅`을 단순화합니다.
