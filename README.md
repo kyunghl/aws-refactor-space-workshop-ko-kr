@@ -1,7 +1,7 @@
 # <p align="center">AWS 마이그레이션 허브 리팩터 스페이스</p>
-[[`AWS Migration Hub Refactor Spaces`]](https://aws.amazon.com/ko/migration-hub/features/)는 프로덕션에서 운영하는 동안 리팩터링 프로세스를 쉽게 관리할 수 있게 해주는 점진적 앱 리팩터링을 위한 새로운 시작점입니다. 고객은 Refactor Spaces를 사용하여 리팩터링을 할 수 있는 기본 인프라의 생성 및 관리가 아닌 애플리케이션의 리팩터링에 집중할 수 있습니다. 이 신규 Migration Hub 기능은 애플리케이션을 마이크로서비스로 발전시키거나 마이크로서비스로 작성된 신규 기능으로 기존 애플리케이션을 확장하는 데 따른 비즈니스 리스크를 줄여줍니다. Refactor Spaces는 여러 계정에 걸친 AWS 서비스를 오케스트레이션하여 고객이 가치를 조기에 실현하도록 도움을 주는 애플리케이션을 점진적으로 발전시키기 위한 리팩터링 환경을 생성합니다.
+[[`AWS Migration Hub Refactor Spaces`]](https://aws.amazon.com/ko/migration-hub/features/)는 프로덕션에서 운영하는 동안 리팩터링 프로세스를 쉽게 관리할 수 있게 해주는 점진적 앱 리팩터링을 위한 새로운 시작점입니다. 고객은 `Refactor Spaces`를 사용하여 리팩터링을 위한 기본 인프라의 생성 및 관리는 AWS에게 맡기고 애플리케이션의 리팩터링에 집중할 수 있습니다. 이 신규 `Migration Hub` 기능은 애플리케이션을 기존 애플리케이션을 마이크로서비스로 작성된 신규 기능으로 확장하는 데 따른 비즈니스 리스크를 줄여줍니다. `Refactor Spaces`는 여러 계정에 걸친 AWS 서비스를 오케스트레이션하여 고객이 `비즈니스 Value`를 조기에 실현하도록 점진적 애플리케이션 리팩터링 환경을 생성합니다.
 
-Migration Hub Refactor Spaces는 다음에 의해 애플리케이션 리팩터링을 간소화합니다.
+`Migration Hub Refactor Spaces`는 애플리케이션 리팩터링을 간소화하여 다음과 같은 이점을 제공합니다:
 
 * 리팩터링 환경을 설정하는 시간 단축 
 * 새로운 마이크로서비스로 기능을 반복적으로 추출하고 및 트래픽을 이전에서 새것으로 재라우팅(Strangler Fig Pattern)하기 위한 복잡성 감소
